@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacén del Este - Tienda de Licores Dominicana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="https://getchat.app/assets/img/favicon/android-icon-36x36.png">
+    <link rel="icon" href="assets/images/custom-favicon.png" type="image/png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://deea5f37acb81f8c11a0-e1b5c6fca8c8b75d961e21f3e05d43ba.ssl.cf1.rackcdn.com/u/_blog/the-best-rum-to-order-in-the-dominican-republic.jpg?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .caribbean-gradient {
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 50%, #3498db 100%);
+        }
+        
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-card {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        
+        .age-verification-overlay {
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Age Verification Overlay -->
+    <div id="ageVerification" class="age-verification-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Verificación de Edad</h2>
+                <p class="text-gray-600 mb-6">Debe tener 18 años o más para ingresar a este sitio. Por favor confirme su edad para continuar.</p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="verifyAge(true)" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition">
+                        Tengo 18 años o más
+                    </button>
+                    <button onclick="verifyAge(false)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-6 rounded-lg transition">
+                        Soy menor de 18 años
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-6">Al continuar, acepta nuestros términos de servicio y política de privacidad. Beba con responsabilidad.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <img src="https://z-cdn-media.chatglm.cn/files/0f834650-0055-4308-95fe-3ba9e0b936c4_logo1.png?auth_key=1862896149-2f0d533a3522476cb8b50bce4dd680ae-0-63b05f236abf562f3f023ce7ded8959c" alt="Almacén del Este" class="h-12 md:h-16">
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#productos" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="#productos" class="text-gray-700 hover:text-blue-600 font-medium">Productos</a>
+                    <a href="#ofertas" class="text-gray-700 hover:text-blue-600 font-medium">Ofertas</a>
+                    <a href="#venta-inteligente" class="text-gray-700 hover:text-blue-600 font-medium">Venta Inteligente</a>
+                    <a href="#nosotros" class="text-gray-700 hover:text-blue-600 font-medium">Nosotros</a>
+                </nav>
+
+                <!-- Right side icons -->
+                <div class="flex items-center space-x-4">
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <button id="languageToggle" class="flex items-center text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-globe mr-1"></i>
+                            <span id="currentLang">ES</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div id="languageMenu" class="hidden absolute right-0 mt-2 w-24 bg-white rounded-md shadow-lg py-1 z-10">
+                            <a href="#" onclick="setLanguage('es')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ES</a>
+                            <a href="#" onclick="setLanguage('en')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">EN</a>
+                        </div>
+                    </div>
+
+                    <!-- User Account -->
+                    <button id="userAccountBtn" class="text-gray-700 hover:text-blue-600">
+                        <i class="fas fa-user"></i>
+                    </button>
+
+                    <!-- Shopping Cart -->
+                    <button id="cartBtn" class="text-gray-700 hover:text-blue-600 relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCount" class="cart-badge">0</span>
+                    </button>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#productos" class="text-gray-700 hover:text-blue-600 font-medium">Productos</a>
+                <a href="#ofertas" class="text-gray-700 hover:text-blue-600 font-medium">Ofertas</a>
+                <a href="#venta-inteligente" class="text-gray-700 hover:text-blue-600 font-medium">Venta Inteligente</a>
+                <a href="#nosotros" class="text-gray-700 hover:text-blue-600 font-medium">Nosotros</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg h-96 flex items-center justify-center text-white">
+        <div class="text-center px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Bienvenidos a Almacén del Este</h1>
+            <p class="text-xl md:text-2xl mb-8">La mejor selección de licores en República Dominicana</p>
+            <a href="#productos" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105">
+                Explorar Productos
+            </a>
+        </div>
+    </section>
+
+    <!-- Responsible Consumption Banner -->
+    <section class="bg-yellow-100 py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                <p class="text-yellow-800 text-sm">Beba con responsabilidad. No conduzca después de consumir alcohol. Prohibida su venta a menores de 18 años.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venta Inteligente Section -->
+    <section id="venta-inteligente" class="py-12 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Venta Inteligente</h2>
+                <p class="text-gray-600">Recomendaciones personalizadas basadas en IA</p>
+            </div>
+
+            <div class="ai-card rounded-xl shadow-lg p-6 text-white max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/3 mb-6 md:mb-0 flex justify-center">
+                        <div class="bg-white bg-opacity-20 rounded-full p-4">
+                            <i class="fas fa-brain text-5xl"></i>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 md:pl-6">
+                        <h3 class="text-2xl font-bold mb-3">Recomendación del Día</h3>
+                        <p class="mb-4">Basado en las altas temperaturas locales y nuestro inventario actual, le recomendamos:</p>
+                        <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-4">
+                            <h4 class="text-xl font-semibold mb-2">Cervezas Locales Artesanales</h4>
+                            <p>Perfectas para refrescarse en estos días calurosos. Disponibles en variedad de sabores tropicales.</p>
+                        </div>
+                        <button class="bg-white text-orange-600 hover:bg-gray-100 font-bold py-2 px-6 rounded-lg transition">
+                            Ver Recomendaciones
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Categorías</h2>
+                <p class="text-gray-600">Explora nuestra amplia selección</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card cursor-pointer">
+                    <div class="h-40 caribbean-gradient flex items-center justify-center">
+                        <i class="fas fa-wine-bottle text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Ron</h3>
+                        <p class="text-gray-600 text-sm">Los mejores rones dominicanos</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card cursor-pointer">
+                    <div class="h-40 caribbean-gradient flex items-center justify-center">
+                        <i class="fas fa-wine-glass-alt text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Vinos</h3>
+                        <p class="text-gray-600 text-sm">Selección internacional</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card cursor-pointer">
+                    <div class="h-40 caribbean-gradient flex items-center justify-center">
+                        <i class="fas fa-beer text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Cervezas</h3>
+                        <p class="text-gray-600 text-sm">Locales e importadas</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card cursor-pointer">
+                    <div class="h-40 caribbean-gradient flex items-center justify-center">
+                        <i class="fas fa-cocktail text-white text-5xl"></i>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Licores</h3>
+                        <p class="text-gray-600 text-sm">Whisky, Vodka y más</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="productos" class="py-12 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Productos Destacados</h2>
+                <p class="text-gray-600">Nuestra selección más popular</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                         <img src="img/Ron Barceló Imperial.jpg" alt="Ron Barceló" class="h-full w-full object-cover">
+                       <!--  <img src="https://images.unsplash.com/photo-1563911892437-1feda316b624?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Ron Barceló" class="h-full w-full object-cover"> -->
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Ron Barceló Imperial</h3>
+                        <p class="text-gray-600 text-sm mb-2">750ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 1,250</span>
+                            <button onclick="addToCart('Ron Barceló Imperial', 1250)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Brugal Añejo" class="h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Brugal Añejo</h3>
+                        <p class="text-gray-600 text-sm mb-2">750ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 980</span>
+                            <button onclick="addToCart('Brugal Añejo', 980)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="img/Reserve Red Wine1.png?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Vino Tinto" class="h-full w-full object-cover">
+                       <!--  <img src="https://images.unsplash.com/photo-1607834837844-5f6aa6a11a2c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Vino Tinto" class="h-full w-full object-cover"> -->
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Vino Tinto Reserva</h3>
+                        <p class="text-gray-600 text-sm mb-2">750ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 1,500</span>
+                            <button onclick="addToCart('Vino Tinto Reserva', 1500)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                         <img src="img/Presidente Beer1.png" alt="Cerveza Presidente" class="h-full w-full object-cover">
+                       <!--  <img src="https://images.unsplash.com/photo-1608296209788-27d0380f6c3c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Cerveza Presidente" class="h-full w-full object-cover"> -->
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Cerveza Presidente</h3>
+                        <p class="text-gray-600 text-sm mb-2">Pack 6 unidades</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 450</span>
+                            <button onclick="addToCart('Cerveza Presidente', 450)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="img/Johnnie Walker Whisky.png" alt="Whisky" class="h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Whisky Johnnie Walker</h3>
+                        <p class="text-gray-600 text-sm mb-2">750ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 2,800</span>
+                            <button onclick="addToCart('Whisky Johnnie Walker', 2800)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="img/Absolut Vodka1.png" alt="Vodka" class="h-full w-full object-cover">
+
+                   <!--      <img src="https://images.unsplash.com/photo-1607834837844-5f6aa6a11a2c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Vodka" class="h-full w-full object-cover"> -->
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Vodka Absolut</h3>
+                        <p class="text-gray-600 text-sm mb-2">750ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 1,750</span>
+                            <button onclick="addToCart('Vodka Absolut', 1750)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 7 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                          <img src="img/Don Julio Tequila1.png" alt="Tequila" class="h-full w-full object-cover">
+                      <!--   <img src="https://images.unsplash.com/photo-1607834837844-5f6aa6a11a2c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Tequila" class="h-full w-full object-cover"> -->
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Tequila Don Julio</h3>
+                        <p class="text-gray-600 text-sm mb-2">750ml</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 2,200</span>
+                            <button onclick="addToCart('Tequila Don Julio', 2200)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 8 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden product-card">
+                    <div class="h-48 bg-gray-200 flex items-center justify-center">
+                        <img src="img/Local Craft Beer1.png" alt="Cerveza Artesanal" class="h-full w-full object-cover">
+                        
+                        <!-- <img src="https://images.unsplash.com/photo-1608296209788-27d0380f6c3c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="h-full w-full object-cover"> -->
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-1">Cerveza Artesanal Local</h3>
+                        <p class="text-gray-600 text-sm mb-2">Pack 6 unidades</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-blue-600">RD$ 680</span>
+                            <button onclick="addToCart('Cerveza Artesanal Local', 680)" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition">
+                    Ver Todos los Productos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers Section -->
+    <section id="ofertas" class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Ofertas Especiales</h2>
+                <p class="text-gray-600">Aprovecha nuestros descuentos exclusivos</p>
+            </div>
+
+            <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-lg p-8 text-white">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-2/3 mb-6 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-2">Promoción de Verano</h3>
+                        <p class="mb-4">15% de descuento en todos los rones nacionales. ¡Perfecto para tus vacaciones!</p>
+                        <p class="text-sm mb-4">Válido hasta el 31 de agosto de 2023</p>
+                        <button class="bg-white text-blue-600 hover:bg-gray-100 font-bold py-2 px-6 rounded-lg transition">
+                            Ver Productos en Oferta .
+                        </button>
+                    </div>
+                    <div class="md:w-1/3 flex justify-center">
+                        <div class="bg-white bg-opacity-20 rounded-full p-6">
+                            <i class="fas fa-percentage text-5xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="nosotros" class="py-12 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Tienda de licores" class="rounded-lg shadow-lg">
+                </div>
+                <div class="md:w-1/2 md:pl-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Sobre Almacén del Este</h2>
+                    <p class="text-gray-600 mb-4">
+                        Con más de 20 años de experiencia, Almacén del Este se ha convertido en la tienda de licores de confianza en República Dominicana. Ofrecemos la más amplia selección de productos nacionales e importados.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        Nuestro compromiso es brindar la mejor calidad y servicio a nuestros clientes, con precios competitivos y un sistema de entrega rápido y seguro.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Productos 100% originales</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Entrega rápida</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Precios competitivos</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Atención personalizada</span>
+                        </div>
+                    </div>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                        Conoce Más
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-12 caribbean-gradient text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-4">Suscríbete a Nuestro Boletín</h2>
+                <p class="mb-6">Recibe ofertas exclusivas y mantente informado sobre nuevos productos</p>
+                <form class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Tu correo electrónico" class="flex-grow px-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-white">
+                    <button type="submit" class="bg-white text-blue-600 hover:bg-gray-100 font-bold py-3 px-6 rounded-lg transition">
+                        Suscribirse
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://z-cdn-media.chatglm.cn/files/0f834650-0055-4308-95fe-3ba9e0b936c4_logo1.png?auth_key=1862896149-2f0d533a3522476cb8b50bce4dd680ae-0-63b05f236abf562f3f023ce7ded8959c" alt="Almacén del Este" class="h-10">
+                    </div>
+                    <p class="text-gray-400 mb-4">La mejor selección de licores en República Dominicana desde 2003.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Inicio</a></li>
+                        <li><a href="#productos" class="text-gray-400 hover:text-white">Productos</a></li>
+                        <li><a href="#ofertas" class="text-gray-400 hover:text-white">Ofertas</a></li>
+                        <li><a href="#nosotros" class="text-gray-400 hover:text-white">Nosotros</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Categorías</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Ron</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Vinos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Cervezas</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Whisky</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Vodka</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                            <span>Av. Principal #123, Santo Domingo, República Dominicana</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2"></i>
+                            <span>+1 (809) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>info@almacendeleste.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 Almacén del Este. Todos los derechos reservados By Zannatul.</p>
+                <p class="mt-2 text-sm">Beba con responsabilidad. Prohibida su venta a menores de 18 años.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">Tu Carrito</h3>
+                    <button id="closeCartModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div id="cartItems" class="mb-6">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+
+                <div class="border-t pt-4">
+                    <div class="flex justify-between mb-4">
+                        <span class="font-semibold">Total:</span>
+                        <span id="cartTotal" class="font-bold text-blue-600">RD$ 0</span>
+                    </div>
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                        Proceder al Pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Account Modal -->
+    <div id="userModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">Mi Cuenta</h3>
+                    <button id="closeUserModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div id="userContent">
+                    <!-- User content will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Global variables
+        let cart = [];
+        let currentUser = null;
+        let language = 'es';
+
+        // Translations
+        const translations = {
+            es: {
+                welcome: "Bienvenidos a Almacén del Este",
+                tagline: "La mejor selección de licores en República Dominicana",
+                explore: "Explorar Productos",
+                responsibleConsumption: "Beba con responsabilidad. No conduzca después de consumir alcohol. Prohibida su venta a menores de 18 años.",
+                smartSale: "Venta Inteligente",
+                smartSaleDesc: "Recomendaciones personalizadas basadas en IA",
+                recommendation: "Recomendación del Día",
+                recommendationDesc: "Basado en las altas temperaturas locales y nuestro inventario actual, le recomendamos:",
+                seeRecommendations: "Ver Recomendaciones",
+                categories: "Categorías",
+                exploreSelection: "Explora nuestra amplia selección",
+                featuredProducts: "Productos Destacados",
+                popularSelection: "Nuestra selección más popular",
+                specialOffers: "Ofertas Especiales",
+                exclusiveDiscounts: "Aprovecha nuestros descuentos exclusivos",
+                summerPromo: "Promoción de Verano",
+                summerPromoDesc: "15% de descuento en todos los rones nacionales. ¡Perfecto para tus vacaciones!",
+                validUntil: "Válido hasta el 31 de agosto de 2023",
+                seeOfferProducts: "Ver Productos en Oferta",
+                aboutUs: "Sobre Almacén del Este",
+                aboutDesc1: "Con más de 20 años de experiencia, Almacén del Este se ha convertido en la tienda de licores de confianza en República Dominicana. Ofrecemos la más amplia selección de productos nacionales e importados.",
+                aboutDesc2: "Nuestro compromiso es brindar la mejor calidad y servicio a nuestros clientes, con precios competitivos y un sistema de entrega rápido y seguro.",
+                originalProducts: "Productos 100% originales",
+                fastDelivery: "Entrega rápida",
+                competitivePrices: "Precios competitivos",
+                personalizedAttention: "Atención personalizada",
+                knowMore: "Conoce Más",
+                newsletter: "Suscríbete a Nuestro Boletín",
+                newsletterDesc: "Recibe ofertas exclusivas y mantente informado sobre nuevos productos",
+                subscribe: "Suscribirse",
+                yourEmail: "Tu correo electrónico",
+                quickLinks: "Enlaces Rápidos",
+                home: "Inicio",
+                products: "Productos",
+                offers: "Ofertas",
+                contact: "Contacto",
+                yourCart: "Tu Carrito",
+                total: "Total",
+                checkout: "Proceder al Pago",
+                myAccount: "Mi Cuenta",
+                login: "Iniciar Sesión",
+                register: "Registrarse",
+                logout: "Cerrar Sesión",
+                welcomeUser: "Bienvenido,",
+                viewOrders: "Ver Mis Pedidos",
+                viewProfile: "Ver Mi Perfil",
+                addToCart: "Añadir al Carrito",
+                ageVerification: "Verificación de Edad",
+                ageVerificationDesc: "Debe tener 18 años o más para ingresar a este sitio. Por favor confirme su edad para continuar.",
+                over18: "Tengo 18 años o más",
+                under18: "Soy menor de 18 años",
+                terms: "Al continuar, acepta nuestros términos de servicio y política de privacidad. Beba con responsabilidad."
+            },
+            en: {
+                welcome: "Welcome to Almacén del Este",
+                tagline: "The best selection of liquors in the Dominican Republic",
+                explore: "Explore Products",
+                responsibleConsumption: "Drink responsibly. Do not drive after consuming alcohol. Sale to minors under 18 is prohibited.",
+                smartSale: "Smart Sale",
+                smartSaleDesc: "Personalized recommendations based on AI",
+                recommendation: "Recommendation of the Day",
+                recommendationDesc: "Based on the high local temperatures and our current inventory, we recommend:",
+                seeRecommendations: "See Recommendations",
+                categories: "Categories",
+                exploreSelection: "Explore our wide selection",
+                featuredProducts: "Featured Products",
+                popularSelection: "Our most popular selection",
+                specialOffers: "Special Offers",
+                exclusiveDiscounts: "Take advantage of our exclusive discounts",
+                summerPromo: "Summer Promotion",
+                summerPromoDesc: "15% discount on all national rums. Perfect for your vacation!",
+                validUntil: "Valid until August 31, 2023",
+                seeOfferProducts: "See Products on Offer",
+                aboutUs: "About Almacén del Este",
+                aboutDesc1: "With over 20 years of experience, Almacén del Este has become the trusted liquor store in the Dominican Republic. We offer the widest selection of national and imported products.",
+                aboutDesc2: "Our commitment is to provide the best quality and service to our customers, with competitive prices and a fast and secure delivery system.",
+                originalProducts: "100% original products",
+                fastDelivery: "Fast delivery",
+                competitivePrices: "Competitive prices",
+                personalizedAttention: "Personalized attention",
+                knowMore: "Know More",
+                newsletter: "Subscribe to Our Newsletter",
+                newsletterDesc: "Receive exclusive offers and stay informed about new products",
+                subscribe: "Subscribe",
+                yourEmail: "Your email address",
+                quickLinks: "Quick Links",
+                home: "Home",
+                products: "Products",
+                offers: "Offers",
+                contact: "Contact",
+                yourCart: "Your Cart",
+                total: "Total",
+                checkout: "Proceed to Checkout",
+                myAccount: "My Account",
+                login: "Login",
+                register: "Register",
+                logout: "Logout",
+                welcomeUser: "Welcome,",
+                viewOrders: "View My Orders",
+                viewProfile: "View My Profile",
+                addToCart: "Add to Cart",
+                ageVerification: "Age Verification",
+                ageVerificationDesc: "You must be 18 years or older to enter this site. Please confirm your age to continue.",
+                over18: "I am 18 years or older",
+                under18: "I am under 18 years old",
+                terms: "By continuing, you accept our terms of service and privacy policy. Drink responsibly."
+            }
+        };
+
+        // Age verification
+        function verifyAge(isOver18) {
+            if (isOver18) {
+                document.getElementById('ageVerification').classList.add('hidden');
+                // Set a cookie to remember the verification
+                document.cookie = "ageVerified=true; max-age=86400; path=/";
+            } else {
+                alert(translations[language].under18);
+                // Redirect to a safe site
+                window.location.href = "https://www.google.com";
+            }
+        }
+
+        // Check if age verification cookie exists
+        function checkAgeVerification() {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie === "ageVerified=true") {
+                    document.getElementById('ageVerification').classList.add('hidden');
+                    return;
+                }
+            }
+        }
+
+        // Language selector
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            document.getElementById('languageMenu').classList.toggle('hidden');
+        });
+
+        function setLanguage(lang) {
+            language = lang;
+            document.getElementById('currentLang').textContent = lang.toUpperCase();
+            document.getElementById('languageMenu').classList.add('hidden');
+            updatePageLanguage();
+        }
+
+        function updatePageLanguage() {
+            // Update all translatable elements
+            document.title = language === 'es' ? 
+                "Almacén del Este - Tienda de Licores Dominicana" : 
+                "Almacén del Este - Dominican Liquor Store";
+            
+            // Hero section
+            document.querySelector('.hero-bg h1').textContent = translations[language].welcome;
+            document.querySelector('.hero-bg p').textContent = translations[language].tagline;
+            document.querySelector('.hero-bg a').textContent = translations[language].explore;
+            
+            // Responsible consumption banner
+            document.querySelector('.bg-yellow-100 p').textContent = translations[language].responsibleConsumption;
+            
+            // Venta Inteligente section
+            document.querySelector('#venta-inteligente h2').textContent = translations[language].smartSale;
+            document.querySelector('#venta-inteligente p').textContent = translations[language].smartSaleDesc;
+            document.querySelector('.ai-card h3').textContent = translations[language].recommendation;
+            document.querySelector('.ai-card p').textContent = translations[language].recommendationDesc;
+            document.querySelector('.ai-card button').textContent = translations[language].seeRecommendations;
+            
+            // Categories section
+            document.querySelector('#categorias h2').textContent = translations[language].categories;
+            document.querySelector('#categorias p').textContent = translations[language].exploreSelection;
+            
+            // Featured products section
+            document.querySelector('#productos h2').textContent = translations[language].featuredProducts;
+            document.querySelector('#productos p').textContent = translations[language].popularSelection;
+            
+            // Special offers section
+            document.querySelector('#ofertas h2').textContent = translations[language].specialOffers;
+            document.querySelector('#ofertas p').textContent = translations[language].exclusiveDiscounts;
+            document.querySelector('.bg-gradient-to-r h3').textContent = translations[language].summerPromo;
+            document.querySelector('.bg-gradient-to-r p').textContent = translations[language].summerPromoDesc;
+            document.querySelector('.bg-gradient-to-r .text-sm').textContent = translations[language].validUntil;
+            document.querySelector('.bg-gradient-to-r button').textContent = translations[language].seeOfferProducts;
+            
+            // About us section
+            document.querySelector('#nosotros h2').textContent = translations[language].aboutUs;
+            document.querySelector('#nosotros p:first-of-type').textContent = translations[language].aboutDesc1;
+            document.querySelector('#nosotros p:last-of-type').textContent = translations[language].aboutDesc2;
+            document.querySelectorAll('#nosotros .grid span')[0].textContent = translations[language].originalProducts;
+            document.querySelectorAll('#nosotros .grid span')[1].textContent = translations[language].fastDelivery;
+            document.querySelectorAll('#nosotros .grid span')[2].textContent = translations[language].competitivePrices;
+            document.querySelectorAll('#nosotros .grid span')[3].textContent = translations[language].personalizedAttention;
+            document.querySelector('#nosotros button').textContent = translations[language].knowMore;
+            
+            // Newsletter section
+            document.querySelector('.caribbean-gradient h2').textContent = translations[language].newsletter;
+            document.querySelector('.caribbean-gradient p').textContent = translations[language].newsletterDesc;
+            document.querySelector('.caribbean-gradient button').textContent = translations[language].subscribe;
+            document.querySelector('.caribbean-gradient input').placeholder = translations[language].yourEmail;
+            
+            // Footer
+            document.querySelectorAll('footer h3')[1].textContent = translations[language].quickLinks;
+            document.querySelectorAll('footer ul')[1].querySelectorAll('li')[0].querySelector('a').textContent = translations[language].home;
+            document.querySelectorAll('footer ul')[1].querySelectorAll('li')[1].querySelector('a').textContent = translations[language].products;
+            document.querySelectorAll('footer ul')[1].querySelectorAll('li')[2].querySelector('a').textContent = translations[language].offers;
+            document.querySelectorAll('footer ul')[1].querySelectorAll('li')[4].querySelector('a').textContent = translations[language].contact;
+            
+            // Cart modal
+            document.querySelector('#cartModal h3').textContent = translations[language].yourCart;
+            document.querySelector('#cartModal .font-semibold').textContent = translations[language].total;
+            document.querySelector('#cartModal button').textContent = translations[language].checkout;
+            
+            // User modal
+            document.querySelector('#userModal h3').textContent = translations[language].myAccount;
+            
+            // Age verification
+            document.querySelector('#ageVerification h2').textContent = translations[language].ageVerification;
+            document.querySelector('#ageVerification p').textContent = translations[language].ageVerificationDesc;
+            document.querySelector('#ageVerification button:first-of-type').textContent = translations[language].over18;
+            document.querySelector('#ageVerification button:last-of-type').textContent = translations[language].under18;
+            document.querySelector('#ageVerification .text-xs').textContent = translations[language].terms;
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
+
+        // Cart functionality
+        document.getElementById('cartBtn').addEventListener('click', function() {
+            document.getElementById('cartModal').classList.remove('hidden');
+            updateCartModal();
+        });
+
+        document.getElementById('closeCartModal').addEventListener('click', function() {
+            document.getElementById('cartModal').classList.add('hidden');
+        });
+
+        function addToCart(productName, price) {
+            const existingItem = cart.find(item => item.name === productName);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    name: productName,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCartCount();
+            showNotification(`${productName} ${translations[language].addToCart}`);
+            
+            // Save cart to Firestore if user is logged in
+            if (currentUser) {
+                saveCartToFirestore();
+            }
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function updateCartModal() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-gray-500 text-center py-4">${language === 'es' ? 'Tu carrito está vacío' : 'Your cart is empty'}</p>`;
+            } else {
+                let total = 0;
+                
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'flex justify-between items-center mb-4 pb-4 border-b';
+                    cartItem.innerHTML = `
+                        <div>
+                            <h4 class="font-medium">${item.name}</h4>
+                            <p class="text-gray-600">RD$ ${item.price} x ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="font-medium mr-4">RD$ ${itemTotal}</span>
+                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(cartItem);
+                });
+                
+                document.getElementById('cartTotal').textContent = `RD$ ${total}`;
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            updateCartModal();
+            
+            // Save cart to Firestore if user is logged in
+            if (currentUser) {
+                saveCartToFirestore();
+            }
+        }
+
+        function saveCartToFirestore() {
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).update({
+                    cart: cart
+                });
+            }
+        }
+
+        function loadCartFromFirestore() {
+            if (currentUser) {
+                db.collection('users').doc(currentUser.uid).get().then(doc => {
+                    if (doc.exists && doc.data().cart) {
+                        cart = doc.data().cart;
+                        updateCartCount();
+                    }
+                });
+            }
+        }
+
+        // User account functionality
+        document.getElementById('userAccountBtn').addEventListener('click', function() {
+            document.getElementById('userModal').classList.remove('hidden');
+            updateUserModal();
+        });
+
+        document.getElementById('closeUserModal').addEventListener('click', function() {
+            document.getElementById('userModal').classList.add('hidden');
+        });
+
+        function updateUserModal() {
+            const userContent = document.getElementById('userContent');
+            
+            if (currentUser) {
+                userContent.innerHTML = `
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-user text-blue-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-lg">${translations[language].welcomeUser} ${currentUser.displayName || currentUser.email}</h4>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition text-left">
+                            <i class="fas fa-user-circle mr-2"></i> ${translations[language].viewProfile}
+                        </button>
+                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition text-left">
+                            <i class="fas fa-shopping-bag mr-2"></i> ${translations[language].viewOrders}
+                        </button>
+                        <button onclick="logout()" class="w-full bg-red-100 hover:bg-red-200 text-red-800 font-medium py-2 px-4 rounded-lg transition text-left">
+                            <i class="fas fa-sign-out-alt mr-2"></i> ${translations[language].logout}
+                        </button>
+                    </div>
+                `;
+            } else {
+                userContent.innerHTML = `
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-user text-blue-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-lg">${language === 'es' ? 'Iniciar Sesión' : 'Login'}</h4>
+                    </div>
+                    <form id="loginForm" class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 mb-1">${language === 'es' ? 'Correo electrónico' : 'Email'}</label>
+                            <input type="email" id="loginEmail" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1">${language === 'es' ? 'Contraseña' : 'Password'}</label>
+                            <input type="password" id="loginPassword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                            ${translations[language].login}
+                        </button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <p class="text-gray-600">${language === 'es' ? '¿No tienes una cuenta?' : 'Don\'t have an account?'}</p>
+                        <button onclick="showRegisterForm()" class="text-blue-600 hover:text-blue-800 font-medium">
+                            ${translations[language].register}
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('loginForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    login();
+                });
+            }
+        }
+
+        function showRegisterForm() {
+            const userContent = document.getElementById('userContent');
+            userContent.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-user-plus text-blue-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-bold text-lg">${language === 'es' ? 'Crear Cuenta' : 'Create Account'}</h4>
+                </div>
+                <form id="registerForm" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">${language === 'es' ? 'Nombre completo' : 'Full Name'}</label>
+                        <input type="text" id="registerName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">${language === 'es' ? 'Correo electrónico' : 'Email'}</label>
+                        <input type="email" id="registerEmail" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">${language === 'es' ? 'Contraseña' : 'Password'}</label>
+                        <input type="password" id="registerPassword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">${language === 'es' ? 'Confirmar contraseña' : 'Confirm Password'}</label>
+                        <input type="password" id="registerConfirmPassword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                        ${translations[language].register}
+                    </button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="text-gray-600">${language === 'es' ? '¿Ya tienes una cuenta?' : 'Already have an account?'}</p>
+                    <button onclick="updateUserModal()" class="text-blue-600 hover:text-blue-800 font-medium">
+                        ${translations[language].login}
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                register();
+            });
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    currentUser = userCredential.user;
+                    updateUserModal();
+                    loadCartFromFirestore();
+                    showNotification(language === 'es' ? 'Sesión iniciada correctamente' : 'Login successful');
+                })
+                .catch((error) => {
+                    showNotification(language === 'es' ? 'Error al iniciar sesión: ' : 'Login error: ' + error.message, 'error');
+                });
+        }
+
+        function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showNotification(language === 'es' ? 'Las contraseñas no coinciden' : 'Passwords do not match', 'error');
+                return;
+            }
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    currentUser = userCredential.user;
+                    
+                    // Update user profile
+                    currentUser.updateProfile({
+                        displayName: name
+                    });
+                    
+                    // Create user document in Firestore
+                    db.collection('users').doc(currentUser.uid).set({
+                        name: name,
+                        email: email,
+                        cart: [],
+                        orders: []
+                    });
+                    
+                    updateUserModal();
+                    showNotification(language === 'es' ? 'Cuenta creada correctamente' : 'Account created successfully');
+                })
+                .catch((error) => {
+                    showNotification(language === 'es' ? 'Error al crear cuenta: ' : 'Account creation error: ' + error.message, 'error');
+                });
+        }
+
+        function logout() {
+            auth.signOut()
+                .then(() => {
+                    currentUser = null;
+                    cart = [];
+                    updateCartCount();
+                    updateUserModal();
+                    showNotification(language === 'es' ? 'Sesión cerrada correctamente' : 'Logout successful');
+                })
+                .catch((error) => {
+                    showNotification(language === 'es' ? 'Error al cerrar sesión: ' : 'Logout error: ' + error.message, 'error');
+                });
+        }
+
+        // Auth state observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                loadCartFromFirestore();
+            } else {
+                currentUser = null;
+            }
+        });
+
+        // Notification function
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAgeVerification();
+            updatePageLanguage();
+            
+            // Initialize anonymous user for cart tracking
+            if (!currentUser) {
+                auth.signInAnonymously()
+                    .catch((error) => {
+                        console.error("Error signing in anonymously", error);
+                    });
+            }
+        });
+
+        // Mock AI recommendation function
+        function getAIRecommendation() {
+            // This is a mock function that would be replaced with actual AI API calls
+            // In a real implementation, this would call an external AI service like Google AI/Gemini API
+            
+            // Mock data for demonstration
+            const recommendations = [
+                {
+                    title: language === 'es' ? "Cervezas Locales Artesanales" : "Local Craft Beers",
+                    description: language === 'es' ? 
+                        "Perfectas para refrescarse en estos días calurosos. Disponibles en variedad de sabores tropicales." : 
+                        "Perfect to cool off on these hot days. Available in a variety of tropical flavors.",
+                    reason: language === 'es' ? 
+                        "Basado en las altas temperaturas locales y nuestro inventario actual" : 
+                        "Based on high local temperatures and our current inventory"
+                },
+                {
+                    title: language === 'es' ? "Ron Blanco Premium" : "Premium White Rum",
+                    description: language === 'es' ? 
+                        "Ideal para cócteles refrescantes. Gran margen de beneficio y alta rotación." : 
+                        "Ideal for refreshing cocktails. High profit margin and high turnover.",
+                    reason: language === 'es' ? 
+                        "Alto margen de beneficio y popularidad en cócteles de verano" : 
+                        "High profit margin and popularity in summer cocktails"
+                },
+                {
+                    title: language === 'es' ? "Vinos Rosados de Verano" : "Summer Rosé Wines",
+                    description: language === 'es' ? 
+                        "Selección especial de vinos rosados perfectos para el verano. Temperatura de servicio ideal." : 
+                        "Special selection of rosé wines perfect for summer. Ideal serving temperature.",
+                    reason: language === 'es' ? 
+                        "Tendencia seasonal y alta disponibilidad en inventario" : 
+                        "Seasonal trend and high availability in inventory"
+                }
+            ];
+            
+            // Return a random recommendation
+            return recommendations[Math.floor(Math.random() * recommendations.length)];
+        }
+
+        // This function would be used to integrate with a real AI service in the future
+        function integrateWithAIService() {
+            /*
+            Future integration with Google AI/Gemini API or similar service:
+            
+            1. Set up API key and authentication for the AI service
+            2. Create a function to send data to the AI service:
+               - Current inventory levels
+               - Local trends (weather, events, etc.)
+               - High-margin products
+               - User preferences (if logged in)
+            3. Process the AI response and display recommendations
+            
+            Example code structure:
+            
+            async function getAIRecommendations() {
+                const apiKey = 'YOUR_AI_API_KEY';
+                const endpoint = 'https://api.example.com/ai/recommendations';
+                
+                const requestData = {
+                    inventory: getCurrentInventory(),
+                    localTrends: getLocalTrends(),
+                    highMarginProducts: getHighMarginProducts(),
+                    userPreferences: currentUser ? getUserPreferences(currentUser.uid) : null
+                };
+                
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                    
+                    const data = await response.json();
+                    return data.recommendations;
+                } catch (error) {
+                    console.error('Error getting AI recommendations:', error);
+                    return getFallbackRecommendations();
+                }
+            }
+            */
+        }
+    </script>
+</body>
+</html>
